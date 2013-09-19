@@ -9,11 +9,14 @@ set MODE=%1
 set SRCPATH=%CD%
 set BUILDPATH=%SRCPATH%\..\build-vs11-ninja
 
-set PATH=c:\windows\system32\wbem;%PATH%;C:\Program Files (x86)\CMake 2.8\bin;G:\rosbe\bin
+set PATH=c:\windows\system32\wbem;%PATH%;G:\rosbe\bin
 
 call "C:\Program Files (x86)\Microsoft Visual Studio 11.0\vc\bin\vcvars32.bat"
 
-md %BUILDPATH%
+IF NOT EXIST "%BUILDPATH%" (
+  md %BUILDPATH%
+)
+
 cd /D %BUILDPATH%
 
 IF NOT EXIST "%BUILDPATH%\reactos\CMakeCache.txt" (
@@ -25,6 +28,7 @@ IF "%MODE%"=="configure" (
   call %SRCPATH%\configure ninja
 )
 
+echo Take this chance to edit the CMakeCache.exe file...
 pause
 
 echo Building Host Tools ...
@@ -44,3 +48,5 @@ cd /D %SRCPATH%
 
 echo Start Time: %START_TIME%
 echo End Time: %TIME%
+
+pause
