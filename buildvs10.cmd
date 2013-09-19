@@ -10,7 +10,7 @@ set SRCPATH=%CD%
 set BUILDPATH=%SRCPATH%\..\build-vs10-ninja
 set BEPATH=%SRCPATH%\..\rosbe\bin
 
-set PATH=c:\windows\system32\wbem;%PATH%;%BEPATH%
+set PATH=%PATH%;%BEPATH%
 
 set PF=%PROGRAMFILES(x86)%
 if "%PF%"=="" do set PF=%PROGRAMFILES%
