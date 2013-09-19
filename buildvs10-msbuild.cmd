@@ -6,15 +6,26 @@ echo Setting up ...
 
 set SRCPATH=%CD%
 set BUILDPATH=%SRCPATH%\..\build-vs10
+set BEPATH=%SRCPATH%\..\rosbe\bin
 
-set PATH=c:\windows\system32\wbem;%PATH%;C:\Program Files (x86)\CMake 2.8\bin
+set PATH=c:\windows\system32\wbem;%PATH%;%BEPATH%
 
-call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
+set PF=%PROGRAMFILES(x86)%
+if "%PF%"=="" do set PF=%PROGRAMFILES%
 
-md %BUILDPATH%
+call "%PF%\Microsoft Visual Studio 10.0\vc\bin\vcvars32.bat"
+
+IF NOT EXIST "%BUILDPATH%" (
+  md %BUILDPATH%
+)
+
 cd /D %BUILDPATH%
 
-IF "%1"=="configure" (
+IF NOT EXIST "%BUILDPATH%\reactos\CMakeCache.txt" (
+  set MODE=configure
+)
+
+IF "%MODE%"=="configure" (
   echo Configuring...
   call %SRCPATH%\configure VSSolution
 )
@@ -31,6 +42,7 @@ msbuild ALL_BUILD.vcxproj
 
 echo Creating the BootCD ...
 cd boot
+
 msbuild bootcd.vcxproj
 
 echo Finished. Returning to the source directory.
@@ -39,3 +51,5 @@ cd /D %SRCPATH%
 
 echo Start Time: %START_TIME%
 echo End Time: %TIME%
+
+pause
