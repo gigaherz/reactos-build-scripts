@@ -13,13 +13,11 @@ IF "%VS_VERSION%"=="10" set VS_VERSION=14
 IF "%PLATFORM%"=="" set PLATFORM=x86
 IF "%BUILDER%"=="" set BUILDER=ninja
 IF "%TASKS%"=="" set TASKS=build
-IF "%BUILDID%"=="" set BUILDID=%COMPILERID%-%PLATFORM%-%BUILDER%
 
-IF "%COMPILER%"=="vs" (
-	set COMPILERID=%COMPILER%%VS_VERSION%
-) else (
-	set COMPILERID=mingw
-)
+set COMPILERID=mingw
+IF "%COMPILER%"=="vs" set COMPILERID=%COMPILER%%VS_VERSION%
+
+IF "%BUILDID%"=="" set BUILDID=%COMPILERID%-%PLATFORM%-%BUILDER%
 
 set SRCPATH=%CD%
 set BUILDPATH=%SRCPATH%\..\build\%BUILDID%
@@ -54,7 +52,7 @@ IF "%TASKS%"=="%TASKS:configure=%" GOTO BeginBuild
 
 title Configuring...
 echo Configuring...
-call %SRCPATH%\configure.cmd ninja
+call %SRCPATH%\configure.cmd %BUILDER%
 
 IF errorlevel 1 (
   title Error Configuring
