@@ -76,7 +76,7 @@ IF errorlevel 1 goto Cleanup
 goto BeginRos
 
 :HTVS
-msbuild /v:q /maxcpucount:8 %TARGET%
+msbuild /v:q /maxcpucount:8 ALL_BUILD.vcxproj
 IF errorlevel 1 goto Cleanup
 
 :BeginRos
