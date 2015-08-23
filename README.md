@@ -9,11 +9,11 @@ LIMITATIONS
 These scripts assume a certain layout of the environment, and may not be fit for everyone.
 
 My environment follows this pattern:
-* <reactos folder>
-* * /rosbe
-* * /<source folder>
-* * * (build scripts go here)
-* * /build
+* &lt;reactos folder&gt;
+  * /rosbe
+  * /&lt;source folder&gt;
+    * &lt;build scripts go here&gt;
+  * /build
 
 The rules for this layout as as follows:
 * The location of the parent folder does not matter, as long as it doesn't contain spaces in it.
