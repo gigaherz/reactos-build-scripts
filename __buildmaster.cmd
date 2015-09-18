@@ -5,8 +5,7 @@ set START_TIME=%TIME%
 title Setting up...
 echo Setting up ...
 
-set TASKS=%1
-
+IF "%MAXCPUCOUNT%"=="" set MAXCPUCOUNT=6
 IF "%TARGET%"=="" set TARGET=bootcd
 IF "%COMPILER%"=="" set COMPILER=gcc
 IF "%VS_VERSION%"=="10" set VS_VERSION=14
@@ -76,7 +75,7 @@ IF errorlevel 1 goto Cleanup
 goto BeginRos
 
 :HTVS
-msbuild /v:q /maxcpucount:8 ALL_BUILD.vcxproj
+msbuild /v:q /maxcpucount:%MAXCPUCOUNT% ALL_BUILD.vcxproj
 IF errorlevel 1 goto Cleanup
 
 :BeginRos
@@ -95,7 +94,7 @@ IF errorlevel 1 goto Cleanup
 goto BootCD
 
 :MainVS
-msbuild /v:q /maxcpucount:8 %TARGET%
+msbuild /v:q /maxcpucount:%MAXCPUCOUNT% %TARGET%
 IF errorlevel 1 goto Cleanup
 
 :BootCD
@@ -111,7 +110,7 @@ IF errorlevel 1 goto Cleanup
 goto Iso
 
 :RosVS
-msbuild /v:q /maxcpucount:8 ALL_BUILD.vcxproj
+msbuild /v:q /maxcpucount:%MAXCPUCOUNT% ALL_BUILD.vcxproj
 IF errorlevel 1 goto Cleanup
 
 :Iso
@@ -125,7 +124,7 @@ IF errorlevel 1 goto Cleanup
 goto EndBuild
 
 :IsoVS
-msbuild /v:q /maxcpucount:8 boot\%TARGET%.vcxproj
+msbuild /v:q /maxcpucount:%MAXCPUCOUNT% boot\%TARGET%.vcxproj
 IF errorlevel 1 goto Cleanup
 
 :EndBuild
