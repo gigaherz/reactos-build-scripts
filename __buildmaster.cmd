@@ -37,7 +37,7 @@ IF NOT EXIST "%BUILDPATH%" (
   md %BUILDPATH%
 )
 
-IF NOT EXIST "%BUILDPATH%\reactos\CMakeCache.txt" (
+IF NOT EXIST "%BUILDPATH%\CMakeCache.txt" (
   IF "%TASKS%"=="%TASKS:configure=%" (
     set TASKS=configure;%TASKS%
   )
@@ -61,6 +61,9 @@ IF errorlevel 1 (
 set BUILD_START_TIME=%TIME%
 
 :BeginBuild
+GOTO BeginRos
+
+:: Host-tools step, not needed anymore
 IF "%TASKS%"=="%TASKS:build=%" GOTO EndBuild
 
 set ERROR_TITLE=Error building Host-Tools
@@ -72,11 +75,15 @@ IF "%BUILDER%"=="VSSolution" GOTO HTVS
 
 ninja
 IF errorlevel 1 goto Cleanup
-goto BeginRos
+goto EndHT
 
 :HTVS
 msbuild /v:q /maxcpucount:%MAXCPUCOUNT% ALL_BUILD.vcxproj
 IF errorlevel 1 goto Cleanup
+
+:EndHT
+cd ..
+:: End of host-tools step
 
 :BeginRos
 IF "%TARGET%"=="bootcd" GOTO BootCD
@@ -84,8 +91,8 @@ IF "%TARGET%"=="livecd" GOTO BootCD
 
 set ERROR_TITLE=Error building ReactOS
 title Building Target %TARGET% (!TIME!)
-echo Building ReactOS ...
-cd ../reactos
+echo Building Target %TARGET% ...
+cd reactos
 
 IF "%BUILDER%"=="VSSolution" GOTO MainVS
 
@@ -101,7 +108,7 @@ IF errorlevel 1 goto Cleanup
 set ERROR_TITLE=Error building ReactOS
 title Building ReactOS (!TIME!)
 echo Building ReactOS ...
-cd ../reactos
+cd reactos
 
 IF "%BUILDER%"=="VSSolution" goto RosVS
 
