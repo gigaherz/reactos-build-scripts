@@ -16,7 +16,7 @@ IF "%TASKS%"=="" set TASKS=build
 set COMPILERID=mingw
 IF "%COMPILER%"=="vs" set COMPILERID=%COMPILER%%VS_VERSION%
 
-IF "%BUILDID%"=="" set BUILDID=%COMPILERID%-%PLATFORM%-%BUILDER%
+IF "%BUILDID%"=="" set BUILDID=%COMPILERID%-%PLATFORM%-%BUILDER%%EXTRA%
 
 set SRCPATH=%CD%
 set BUILDPATH=%SRCPATH%\..\build\%BUILDID%
@@ -51,7 +51,7 @@ IF "%TASKS%"=="%TASKS:configure=%" GOTO BeginBuild
 
 title Configuring...
 echo Configuring...
-call %SRCPATH%\configure.cmd %BUILDER%
+call %SRCPATH%\configure.cmd %BUILDER% %CMAKE_EXTRA_FLAGS%
 
 IF errorlevel 1 (
   title Error Configuring

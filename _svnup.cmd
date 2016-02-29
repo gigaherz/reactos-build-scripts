@@ -7,4 +7,18 @@ if "%_ROSBE_BASEDIR%"=="" (
  call %BEPATH%\RosBE.cmd
 )
 
-echo no | ssvn update
+svn up
+
+if exist modules\rosapps (
+ cd modules\rosapps
+ svn up
+ cd ..\..
+)
+
+if exist modules\rostests (
+ cd modules\rostests
+ svn up
+ cd ..\..
+)
+
+pause
