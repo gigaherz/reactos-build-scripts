@@ -1,0 +1,6 @@
+@echo off
+
+set COMPILER=vs
+set VS_VERSION=15
+
+call __buildmaster.cmd

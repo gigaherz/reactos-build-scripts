@@ -5,6 +5,7 @@ set START_TIME=%TIME%
 title Setting up...
 echo Setting up ...
 
+IF "%PAUSE%"=="" set PAUSE=yes
 IF "%MAXCPUCOUNT%"=="" set MAXCPUCOUNT=6
 IF "%TARGET%"=="" set TARGET=bootcd
 IF "%COMPILER%"=="" set COMPILER=gcc
@@ -28,7 +29,13 @@ IF "%PF%"=="" do set PF=%PROGRAMFILES%
 IF "%COMPILER%"=="vs" (
   set "PATH=%PATH%;%BEPATH%\bin"
 
-  if "%VCINSTALLDIR%"=="" call "%PF%\Microsoft Visual Studio %VS_VERSION%.0\vc\vcvarsall.bat" %PLATFORM%
+  if "%VCINSTALLDIR%"=="" (
+    if "%VS_VERSION%"=="15" (
+      call "%PF%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %PLATFORM%
+    ) else (
+      call "%PF%\Microsoft Visual Studio %VS_VERSION%.0\vc\vcvarsall.bat" %PLATFORM%
+    )
+  )
 ) else (
   if "%_ROSBE_BASEDIR%"=="" call %BEPATH%\RosBE.cmd
 )
@@ -47,6 +54,8 @@ cd /D %BUILDPATH%
 
 echo Settings: %TARGET% / %COMPILERID%-%PLATFORM%-%BUILDER% / %TASKS%
 
+set PATH=%PATH:C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;=%%
+
 IF "%TASKS%"=="%TASKS:configure=%" GOTO BeginBuild
 
 title Configuring...
@@ -58,13 +67,14 @@ IF errorlevel 1 (
   goto Cleanup
 )
 
+:BeginBuild
+
 set BUILD_START_TIME=%TIME%
 
-:BeginBuild
-GOTO BeginRos
-
-:: Host-tools step, not needed anymore
 IF "%TASKS%"=="%TASKS:build=%" GOTO EndBuild
+
+:: Host-tools step is not needed anymore
+GOTO BeginRos
 
 set ERROR_TITLE=Error building Host-Tools
 title Building Host Tools (!TIME!)
@@ -171,4 +181,4 @@ IF NOT "%TASKS%"=="%TASKS:build=%" echo Build Start Time: %BUILD_START_TIME%
 echo End Time:         %TIME%
 echo Total Elapsed:    %DURATION%
 
-pause
+if "%PAUSE%"=="yes" pause
